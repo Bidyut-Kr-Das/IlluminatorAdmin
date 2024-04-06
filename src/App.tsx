@@ -3,6 +3,7 @@ import Nav from "./components/Nav";
 import LoginPage from "./pages/LoginPage";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "./components/theme-provider";
+import Dashboard from "./pages/Dashboard";
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -10,7 +11,9 @@ function App() {
         <Toaster richColors position="bottom-right" />
         <Nav />
         <Routes>
-          <Route path="/" element={<LoginPage />} />
+          <Route path={`/`} element={<LoginPage />} />
+          <Route path={`/login`} element={<LoginPage />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </main>
     </ThemeProvider>

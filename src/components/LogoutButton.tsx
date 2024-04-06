@@ -1,0 +1,34 @@
+import { removeAccessToken } from "@/functions/localStorageAccess";
+import usePostReq from "@/hooks/usePostReq";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { Button } from "./ui/button";
+
+const LogoutButton = () => {
+  const { postData } = usePostReq();
+  const navigate = useNavigate();
+
+  const logout = () => {
+    const logoutRequest = async () => {
+      await postData(`/logout`, {});
+    };
+    toast.promise(logoutRequest, {
+      loading: `Logging out...`,
+      success: () => {
+        removeAccessToken();
+        navigate(`/login`);
+        return `Logged out successfully`;
+      },
+      error: (err: any) => {
+        return err.message;
+      }
+    });
+  };
+  return (
+    <Button variant="ghost" className="font-semibold" onClick={logout}>
+      Logout
+    </Button>
+  );
+};
+
+export default LogoutButton;

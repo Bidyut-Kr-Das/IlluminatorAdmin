@@ -1,6 +1,3 @@
-import axios from "axios";
-axios.defaults.withCredentials = true;
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -18,10 +15,7 @@ const LoginForm = () => {
   //states
   const [form, setForm] = useState<FormType>({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const { response, loading, postData } = usePostReq(
-    `http://localhost:8002/api/v1`
-    // `https://illuminatorbackend.up.railway.app/api/v1`
-  );
+  const { response, loading, postData } = usePostReq();
 
   const navigate = useNavigate();
 
@@ -32,12 +26,12 @@ const LoginForm = () => {
       // console.log(responseData.data);
       setAccessToken(responseData.data.accessToken);
 
-      navigate(`/profile`);
+      navigate(`/dashboard`);
     }
   }, [response]);
 
   const loginRequest = async () => {
-    await postData<FormType>(`/admin/login`, { ...form });
+    await postData<FormType>(`/login`, { ...form });
     setForm({ email: "", password: "" });
   };
 
@@ -52,11 +46,8 @@ const LoginForm = () => {
       loading: `Loggin in...`,
       success: () => {
         // console.log(data);
-        try {
-          return `Logged in successfully`;
-        } finally {
-          // navigate(`/profile`);
-        }
+
+        return `Logged in successfully`;
       },
       error: (err: any) => {
         // console.log(err.response.data.message);
@@ -99,7 +90,7 @@ const LoginForm = () => {
           type={showPassword ? "text" : "password"}
           placeholder="Password"
           name="string"
-          id="email"
+          id="password"
           value={form.password}
           onChange={e => {
             setForm({ ...form, password: e.target.value });
@@ -124,51 +115,5 @@ const LoginForm = () => {
     </div>
   );
 };
-
-// type inputFieldProps = {
-//   label: string;
-//   type: string;
-//   name: string;
-//   id: string;
-//   autoComplete?: string;
-//   required?: boolean;
-//   value?: string;
-//   elementType?: string;
-//   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-//   onClick?: () => void;
-// };
-
-// const InputField = ({ label, type, name, ...props }: inputFieldProps) => {
-//   return (
-//     <span className="flex flex-col-reverse sm:flex-row-reverse w-full relative justify-center sm:items-center sm:gap-0 gap-2">
-//       <input
-//         type={type}
-//         name={name}
-//         id={props.id}
-//         autoComplete={props.autoComplete}
-//         required={props.required}
-//         value={props.value}
-//         className="shadow-md peer focus:text-primary text-primary outline-none bg-quinary rounded-md w-full h-10 px-2"
-//         onChange={props.onChange}
-//       />
-
-//       {props.elementType === "password" && (
-//         <img
-//           src={`/icons/eye-${type === "password" ? `open` : `close`}.svg`}
-//           alt="showPass"
-//           className="cursor-pointer absolute text-primary bottom-2 md:my-auto right-2 md:bottom-0 md:top-0  size-6"
-//           onClick={props.onClick}
-//         />
-//       )}
-
-//       <label
-//         htmlFor={props.id}
-//         className="text-white font-bold peer-focus:text-secondary w-full sm:w-1/2"
-//       >
-//         {label}
-//       </label>
-//     </span>
-//   );
-// };
 
 export default LoginForm;

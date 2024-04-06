@@ -1,7 +1,7 @@
-import axios from 'axios';
-import { useCallback, useState } from 'react';
+import adminApi from "@/api/adminApi";
+import { useCallback, useState } from "react";
 
-const usePostReq = (baseUrl: string) => {
+const usePostReq = () => {
   const [response, setResponse] = useState({ data: null });
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -9,7 +9,7 @@ const usePostReq = (baseUrl: string) => {
     async <dataType>(url: string, data: dataType) => {
       try {
         setLoading(true);
-        const response = await axios.post(`${baseUrl}${url}`, data);
+        const response = await adminApi.post(url, data);
         setResponse({ data: response.data });
       } catch (error: any) {
         console.log(error);
