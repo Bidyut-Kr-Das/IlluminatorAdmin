@@ -12,7 +12,9 @@ const usePostReq = () => {
         const response = await adminApi.post(url, data);
         setResponse({ data: response.data });
       } catch (error: any) {
-        console.log(error);
+        // console.log(error);
+        if (error.response === undefined)
+          throw new Error(`Can not connect to the server!`);
         throw new Error(error.response.data.message);
       } finally {
         setLoading(false);

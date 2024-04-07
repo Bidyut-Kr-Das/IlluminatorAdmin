@@ -25,7 +25,11 @@ const LogoutButton = () => {
     });
   };
   return (
-    <Button variant="ghost" className="font-semibold" onClick={logout}>
+    <Button
+      variant="ghost"
+      className="font-semibold sm:mr-0 -mr-6"
+      onClick={logout}
+    >
       Logout
     </Button>
   );
