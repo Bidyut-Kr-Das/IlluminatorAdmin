@@ -3,6 +3,7 @@ import usePostReq from "@/hooks/usePostReq";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
+import adminApi from "@/api/adminApi";
 
 const LogoutButton = () => {
   const { postData } = usePostReq();
@@ -10,7 +11,7 @@ const LogoutButton = () => {
 
   const logout = () => {
     const logoutRequest = async () => {
-      await postData(`/logout`, {});
+      await postData(`/logout`, {}, adminApi);
     };
     toast.promise(logoutRequest, {
       loading: `Logging out...`,

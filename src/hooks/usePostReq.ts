@@ -1,4 +1,4 @@
-import adminApi from "@/api/adminApi";
+import { AxiosInstance } from "axios";
 import { useCallback, useState } from "react";
 
 const usePostReq = () => {
@@ -6,10 +6,10 @@ const usePostReq = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const postData = useCallback(
-    async <dataType>(url: string, data: dataType) => {
+    async <dataType>(url: string, data: dataType, api: AxiosInstance) => {
       try {
         setLoading(true);
-        const response = await adminApi.post(url, data);
+        const response = await api.post(url, data);
         setResponse({ data: response.data });
       } catch (error: any) {
         // console.log(error);

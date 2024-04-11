@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { setAccessToken } from "../functions/localStorageAccess.ts";
-import usePostReq from "../hooks/usePostReq.ts";
-import { Input } from "./ui/input.tsx";
-import { Button } from "./ui/button.tsx";
+import { setAccessToken } from "../../functions/localStorageAccess.ts";
+import usePostReq from "../../hooks/usePostReq.ts";
+import { Input } from "../ui/input.tsx";
+import { Button } from "../ui/button.tsx";
+import adminApi from "@/api/adminApi";
 
 type FormType = {
   email: string;
@@ -31,7 +32,7 @@ const LoginForm = () => {
   }, [response]);
 
   const loginRequest = async () => {
-    await postData<FormType>(`/login`, { ...form });
+    await postData<FormType>(`/login`, { ...form }, adminApi);
     setForm({ email: "", password: "" });
   };
 
