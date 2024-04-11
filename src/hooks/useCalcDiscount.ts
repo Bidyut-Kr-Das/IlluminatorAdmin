@@ -31,7 +31,8 @@ const useCalcDiscount = () => {
     discountPrice,
     finalPrice,
     handlePriceChange,
-    handleDiscountChange
+    handleDiscountChange,
+    setFinalPrice
   };
 };
 

@@ -8,11 +8,13 @@ import {
   SelectValue
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import getFormValues from "@/functions/getFormValues.ts";
 import FileInput from "../ui/fileInput";
 import { useState } from "react";
 
 import useCalcDiscount from "@/hooks/useCalcDiscount";
+import usePostReq from "@/hooks/usePostReq";
+import productApi from "@/api/productApi";
+import { toast } from "sonner";
 
 const AddProductForm = () => {
   const [discount, setDiscount] = useState(true); //<- discount switch state
@@ -22,14 +24,25 @@ const AddProductForm = () => {
     discountPrice,
     finalPrice,
     handlePriceChange,
-    handleDiscountChange
+    handleDiscountChange,
+    setFinalPrice
   } = useCalcDiscount(); //<- discount calculation hook
+
+  const { postData } = usePostReq(); //<- post request hook
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = e.currentTarget;
-    const data = getFormValues(form);
-    console.log(data);
+    const formData = new FormData(e.currentTarget);
+    const addProduct = postData<FormData>(`/`, formData, productApi);
+    toast.promise(addProduct, {
+      loading: `Adding product...`,
+      success: () => {
+        return `Product added successfully`;
+      },
+      error: (err: any) => {
+        return err.message;
+      }
+    });
   };
 
   return (
@@ -65,8 +78,8 @@ const AddProductForm = () => {
               </SelectTrigger>
               <SelectContent className="bg-customPrimary border border-white/50">
                 <SelectGroup className="">
-                  <SelectItem value="Neon Light">Neon Light</SelectItem>
-                  <SelectItem value="Glow Text Display">
+                  <SelectItem value="neon light">Neon Light</SelectItem>
+                  <SelectItem value="led light display">
                     Glow Text Display
                   </SelectItem>
                 </SelectGroup>
@@ -91,10 +104,14 @@ const AddProductForm = () => {
             <div className="flex mt-0 lg:mt-10 items-center gap-4 w-full lg:w-auto whitespace-nowrap">
               <label htmlFor="hasDiscount">Apply Discount</label>
               <Switch
+                name="hasDiscount"
                 id="hasDiscount"
                 className="data-[state=unchecked]:bg-white/20"
                 onClick={() => {
                   setDiscount(!discount);
+                  !discount
+                    ? setFinalPrice(price)
+                    : setFinalPrice(price - (price * discountPrice) / 100);
                 }}
               />
             </div>
@@ -129,8 +146,9 @@ const AddProductForm = () => {
                 id="finalPrice"
                 autoComplete="off"
                 required={true}
-                disabled={true}
+                disabled={false}
                 value={finalPrice}
+                readOnly={true}
               />
             </div>
           </section>
@@ -140,7 +158,7 @@ const AddProductForm = () => {
                 Description
               </label>
               <textarea
-                name="description"
+                name="productDescription"
                 id="description"
                 className="bg-transparent border border-white/50 p-2 rounded-md resize-none"
                 placeholder="Enter product description"
